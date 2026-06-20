@@ -3,8 +3,11 @@ Actividad formativa N°2 de AED
 Alumno: Meza, Leandro David
 Comisión: ISI B (k1.2)
 
+Enlace página web
 # https://zponzio.github.io/UTNOutdoors/
 
+Enlace video YouTube 
+# https://youtu.be/vG7YI3NT1Q4?si=Hjqw1d5bj-R9tqfZ
 
 1. Nombre y Descripción Innovadora
 
