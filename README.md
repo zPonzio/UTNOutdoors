@@ -16,6 +16,7 @@ Desde el punto de vista de datos, lo interesante (y el eje de esta actividad) es
 
 Se define una única estructura de registro homogénea, capaz de representar tanto un producto individual como un combo temático, evitando la duplicación de estructuras y favoreciendo la integridad del archivo de catálogo.
 
+```
 ACCION GestionCatalogoUTNOutdoors ES;
 AMBIENTE
 ITEMCATALOGO = Registro
@@ -40,12 +41,13 @@ ITEMCATALOGO = Registro
     porcentajeAhorro       : Real;
     imagenReferencia       : AN(120);
 Fin Registro;
+```
 
-(Se usa la notación literaria de la cátedra: ACCION ... ES; AMBIENTE; NombreTipo = Registro ... Fin Registro;, con un sub-registro anidado para representar el campo continente, tal como en el ejemplo de AUTO / FechaFabricacion visto en clase.)
+3. Enlaces a chats con Gemini y Claude
 
-Para acceder a los campos en el algoritmo se usa el selector de campo (.), igual que Reg.DNI o Reg.FechaFabricacion.Dia del material de cátedra:
+https://gemini.google.com/share/9994453b06e5
+https://claude.ai/share/da084830-7a3c-4eb6-90e7-52e93c4b4417
 
-Reg.idProducto
-Reg.componentesCombo.idComponente1
-Reg.componentesCombo.cantidad1
+4. Reflexión
 
+El trabajar con la IA como herramienta para el desarrollo de código, asistente para la planificación y despliegue, y la redacción de texto; es sin dudas una forma de trabajar inexorable en la actualidad. Negar su uso hubiese implicado en este caso, tener que dediccar semanas, y seguramente meses, al aprendizaje de diferentes lenguajes y comprensión del uso de la plataforma de GitHub. Sin embargo requiere una revisión constante y activa de cada uno de los detalles del contenido que dicha herramienta produce, de lo contrario existirían errores muy significativos en el producto final.
