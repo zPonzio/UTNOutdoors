@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UTN Outdoors — Camping &amp; Pesca</title>
+<style>
+  /* ============ TOKENS ============ */
+  :root{
+    --forest-deep:#172620;
+    --forest:#24382c;
+    --pine:#3f6b4f;
+    --pine-light:#6c9a78;
+    --clay:#bf5e2c;
+    --clay-light:#e08a4f;
+    --river:#3f7c8c;
+    --river-light:#7fb6c2;
+    --sand:#f3ecda;
+    --sand-deep:#e3d6b4;
+    --ink:#211f1a;
+    --ink-soft:#5b5648;
+    --white:#fffaf0;
+
+    --font-display: "Arial Narrow", "Helvetica Neue Condensed", "Roboto Condensed", Impact, sans-serif;
+    --font-body: Georgia, "Iowan Old Style", "Palatino Linotype", serif;
+    --font-mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, "Liberation Mono", monospace;
+
+    --radius-s: 4px;
+    --radius-m: 10px;
+    --shadow-card: 0 6px 18px rgba(23,38,32,0.16);
+    --shadow-soft: 0 2px 8px rgba(23,38,32,0.10);
+  }
+
+  *,*::before,*::after{ box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+  body{
+    margin:0;
+    background:var(--sand);
+    color:var(--ink);
+    font-family:var(--font-body);
+    font-size:16px;
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+  img,svg{ display:block; max-width:100%; }
+  h1,h2,h3,h4{
+    font-family:var(--font-display);
+    text-transform:uppercase;
+    letter-spacing:0.04em;
+    color:var(--forest-deep);
+    margin:0 0 0.5em;
+    font-weight:800;
+  }
+  p{ margin:0 0 1em; color:var(--ink-soft); }
+  a{ color:inherit; }
+  button{ font-family:inherit; }
+
+  :focus-visible{
+    outline:3px solid var(--river);
+    outline-offset:2px;
+  }
+
+  .visually-hidden{
+    position:absolute; width:1px; height:1px; overflow:hidden;
+    clip:rect(0 0 0 0); white-space:nowrap;
+  }
+
+  .wrap{
+    max-width:1180px;
+    margin:0 auto;
+    padding:0 24px;
+  }
+
+  /* ============ NAV ============ */
+  .topbar{
+    position:sticky; top:0; z-index:50;
+    background:var(--forest-deep);
+    border-bottom:3px solid var(--clay);
+  }
+  .topbar-inner{
+    max-width:1180px; margin:0 auto; padding:0 24px;
+    display:flex; align-items:center; justify-content:space-between;
+    gap:16px; min-height:68px; flex-wrap:wrap;
+  }
+  .brand{
+    display:flex; align-items:center; gap:10px;
+    color:var(--white); text-decoration:none;
+    font-family:var(--font-display);
+    font-weight:800; font-size:1.35rem; letter-spacing:0.06em;
+    padding:8px 0;
+  }
+  .brand svg{ width:30px; height:30px; flex:none; }
+  .brand .sub{
+    display:block; font-family:var(--font-mono); font-size:0.55rem;
+    letter-spacing:0.2em; color:var(--pine-light); text-transform:none;
+  }
+
+  nav.tabs{
+    display:flex; gap:4px; flex-wrap:wrap;
+  }
+  nav.tabs button{
+    background:transparent; border:none; cursor:pointer;
+    color:var(--sand-deep);
+    font-family:var(--font-display);
+    text-transform:uppercase; letter-spacing:0.05em;
+    font-size:0.92rem; font-weight:700;
+    padding:22px 14px 18px;
+    border-bottom:3px solid transparent;
+    transition:color 180ms ease, border-color 180ms ease;
+    min-height:44px;
+  }
+  nav.tabs button:hover{ color:var(--white); }
+  nav.tabs button[aria-selected="true"]{
+    color:var(--white);
+    border-bottom-color:var(--clay);
+  }
+
+  .cart-pill{
+    display:flex; align-items:center; gap:8px;
+    background:var(--pine); color:var(--white);
+    padding:9px 14px; border-radius:999px;
+    font-family:var(--font-mono); font-size:0.85rem;
+    min-height:44px;
+  }
+  .cart-pill svg{ width:18px; height:18px; }
+  #cartCount{
+    background:var(--clay); color:var(--white);
+    border-radius:999px; min-width:22px; height:22px;
+    display:inline-flex; align-items:center; justify-content:center;
+    font-size:0.78rem; font-weight:700; padding:0 5px;
+  }
+
+  /* ============ HERO ============ */
+  .hero{
+    position:relative; overflow:hidden;
+    background:linear-gradient(180deg, var(--forest-deep) 0%, var(--forest) 100%);
+    color:var(--white);
+    padding:64px 0 86px;
+  }
+  .hero-topo{
+    position:absolute; inset:0; width:100%; height:100%;
+    opacity:0.5; pointer-events:none;
+  }
+  .hero-content{ position:relative; z-index:1; max-width:640px; }
+  .eyebrow{
+    font-family:var(--font-mono); letter-spacing:0.25em; text-transform:uppercase;
+    color:var(--river-light); font-size:0.78rem; margin-bottom:14px;
+  }
+  .hero h1{
+    color:var(--white); font-size:clamp(2.2rem, 5vw, 3.4rem);
+    line-height:1.05; margin-bottom:0.4em;
+  }
+  .hero h1 span{ color:var(--clay-light); }
+  .hero p.lead{
+    font-family:var(--font-body); color:var(--sand-deep);
+    font-size:1.08rem; max-width:520px;
+  }
+  .hero-cta{ display:flex; gap:12px; margin-top:24px; flex-wrap:wrap; }
+  .btn{
+    display:inline-flex; align-items:center; justify-content:center; gap:8px;
+    border:none; cursor:pointer; border-radius:var(--radius-s);
+    font-family:var(--font-display); text-transform:uppercase; letter-spacing:0.05em;
+    font-weight:700; font-size:0.9rem; min-height:44px; padding:0 22px;
+    transition:transform 150ms ease, box-shadow 150ms ease, background 150ms ease;
+  }
+  .btn:active{ transform:translateY(1px); }
+  .btn-primary{ background:var(--clay); color:var(--white); }
+  .btn-primary:hover{ background:var(--clay-light); }
+  .btn-ghost{ background:transparent; color:var(--white); border:2px solid rgba(255,255,255,0.4); }
+  .btn-ghost:hover{ border-color:var(--white); }
+
+  /* ============ SECTIONS ============ */
+  section.view{ display:none; }
+  section.view.active{ display:block; animation:fadeIn 320ms ease; }
+  @keyframes fadeIn{ from{ opacity:0; transform:translateY(6px);} to{ opacity:1; transform:translateY(0);} }
+
+  .section-pad{ padding:56px 0; }
+  .section-head{ max-width:680px; margin-bottom:36px; }
+  .section-head .eyebrow{ color:var(--river); }
+  .section-head h2{ font-size:2rem; color:var(--forest-deep); }
+  .section-head p{ font-size:1.02rem; }
+
+  .trail-divider{
+    display:flex; align-items:center; gap:10px;
+    color:var(--pine); margin:8px 0 36px;
+  }
+  .trail-divider svg{ width:100%; height:14px; flex:1; }
+
+  /* ============ PRODUCT GRID ============ */
+  .grid{
+    display:grid; gap:22px;
+    grid-template-columns:repeat(auto-fill, minmax(248px, 1fr));
+  }
+  .card{
+    background:var(--white); border-radius:var(--radius-m);
+    box-shadow:var(--shadow-card);
+    overflow:hidden; display:flex; flex-direction:column;
+    border:1px solid var(--sand-deep);
+  }
+  .card-art{
+    position:relative;
+    background:var(--sand-deep);
+    aspect-ratio:4/3;
+    overflow:hidden;
+  }
+  .card-art img{ width:100%; height:100%; object-fit:cover; object-position:center; display:block; }
+  .card-art.img-fallback{
+    background:radial-gradient(circle at 30% 20%, var(--pine-light) 0%, var(--forest) 100%);
+    display:flex; align-items:center; justify-content:center; padding:30px;
+  }
+  .card-art.img-fallback svg{ width:88px; height:88px; }
+  .card-body{ padding:18px 18px 20px; display:flex; flex-direction:column; gap:8px; flex:1; }
+  .tag{
+    align-self:flex-start;
+    font-family:var(--font-mono); font-size:0.7rem; letter-spacing:0.08em;
+    text-transform:uppercase; color:var(--pine);
+    background:#e9f0e7; padding:3px 9px; border-radius:999px;
+  }
+  .card h3{ font-size:1.05rem; margin:2px 0 0; color:var(--ink); }
+  .card .desc{ font-size:0.88rem; margin:0; flex:1; }
+  .card-footer{
+    display:flex; align-items:center; justify-content:space-between;
+    margin-top:6px; gap:10px;
+  }
+  .price{ font-family:var(--font-mono); font-weight:700; color:var(--forest-deep); font-size:1.05rem; }
+  .stock-note{ font-family:var(--font-mono); font-size:0.7rem; color:var(--ink-soft); }
+  .btn-add{
+    background:var(--forest-deep); color:var(--white);
+    border-radius:var(--radius-s); border:none; cursor:pointer;
+    font-family:var(--font-display); text-transform:uppercase; letter-spacing:0.04em;
+    font-weight:700; font-size:0.8rem; min-height:44px; padding:0 16px;
+    transition:background 150ms ease, transform 150ms ease;
+  }
+  .btn-add:hover{ background:var(--pine); }
+  .btn-add.added{ background:var(--clay); }
+
+  /* ============ COMBOS ============ */
+  .combo-grid{
+    display:grid; gap:26px;
+    grid-template-columns:repeat(auto-fill, minmax(310px, 1fr));
+  }
+  .combo-card{
+    background:var(--white); border-radius:var(--radius-m);
+    box-shadow:var(--shadow-card);
+    overflow:hidden; display:flex; flex-direction:column;
+    border:1px solid var(--sand-deep);
+  }
+  .combo-art{
+    position:relative;
+    aspect-ratio:4/3;
+    display:grid; grid-template-columns:1fr 1fr; grid-template-rows:1fr 1fr;
+    gap:2px; background:var(--forest-deep); overflow:hidden;
+  }
+  .combo-art .cell{ position:relative; overflow:hidden; background:var(--sand-deep); }
+  .combo-art .cell img{ width:100%; height:100%; object-fit:cover; object-position:center; display:block; }
+  .combo-art .cell.img-fallback{
+    background:radial-gradient(circle at 30% 20%, var(--pine-light) 0%, var(--forest) 100%);
+    display:flex; align-items:center; justify-content:center;
+  }
+  .combo-art .cell.img-fallback svg{ width:32px; height:32px; }
+  .combo-stamp{
+    position:absolute; top:10px; right:10px; z-index:2;
+    width:64px; height:64px; border-radius:50%;
+    background:var(--clay); color:var(--white);
+    box-shadow:0 3px 10px rgba(23,38,32,0.35);
+    display:flex; align-items:center; justify-content:center;
+    text-align:center; font-family:var(--font-display);
+    font-size:0.64rem; line-height:1.1; letter-spacing:0.02em;
+    transform:rotate(8deg);
+  }
+  .combo-body{
+    background:var(--forest-deep); color:var(--sand);
+    padding:20px 22px 24px; display:flex; flex-direction:column; gap:10px; flex:1;
+  }
+  .combo-body h3{ color:var(--white); font-size:1.25rem; margin:2px 0 0; }
+  .combo-body .desc{ color:var(--sand-deep); font-size:0.88rem; margin:0; flex:1; }
+  .combo-tag{
+    align-self:flex-start; background:rgba(108,154,120,0.22); color:#9fd1ab;
+    font-family:var(--font-mono); font-size:0.7rem; letter-spacing:0.08em;
+    text-transform:uppercase; padding:3px 9px; border-radius:999px;
+  }
+  .combo-pricing{ display:flex; align-items:baseline; gap:10px; }
+  .price-old{ font-family:var(--font-mono); text-decoration:line-through; color:var(--sand-deep); opacity:0.6; font-size:0.9rem; }
+  .price-new{ font-family:var(--font-mono); font-weight:700; color:var(--clay-light); font-size:1.35rem; }
+  .combo-body .btn-add{ background:var(--clay); margin-top:6px; }
+  .combo-body .btn-add:hover{ background:var(--clay-light); }
+
+  /* ============ ABOUT ============ */
+  .about-grid{
+    display:grid; grid-template-columns:1.1fr 0.9fr; gap:48px; align-items:start;
+  }
+  .about-grid .lead{ font-size:1.15rem; color:var(--ink); font-family:var(--font-body); }
+  .stat-list{ list-style:none; margin:0; padding:0; display:grid; gap:18px; }
+  .stat-list li{
+    background:var(--white); border:1px solid var(--sand-deep);
+    border-left:4px solid var(--pine);
+    border-radius:var(--radius-s); padding:14px 16px;
+  }
+  .stat-list strong{ display:block; font-family:var(--font-display); color:var(--forest-deep); font-size:1.5rem; }
+  .stat-list span{ font-size:0.85rem; color:var(--ink-soft); }
+  .values{ display:grid; gap:14px; margin-top:28px; }
+  .value-row{ display:flex; gap:14px; align-items:flex-start; }
+  .value-row svg{ width:26px; height:26px; flex:none; color:var(--river); margin-top:2px; }
+  .value-row h4{ font-size:0.98rem; margin-bottom:2px; color:var(--ink); }
+  .value-row p{ font-size:0.9rem; margin:0; }
+
+  /* ============ TECH VIEW ============ */
+  .tech-intro{
+    background:var(--forest-deep); color:var(--sand);
+    border-radius:var(--radius-m); padding:24px 26px; margin-bottom:30px;
+  }
+  .tech-intro p{ color:var(--sand-deep); margin:0; font-family:var(--font-body); }
+  .record-block{
+    background:var(--ink); color:#cfe8d2;
+    font-family:var(--font-mono); font-size:0.82rem; line-height:1.7;
+    border-radius:var(--radius-m); padding:22px 24px; overflow-x:auto;
+    margin-bottom:34px; box-shadow:var(--shadow-card);
+    white-space:pre; tab-size:4;
+  }
+  .record-block .kw{ color:var(--clay-light); }
+  .record-block .ty{ color:var(--river-light); }
+  .record-block .cm{ color:#7c8a76; }
+
+  .table-scroll{ overflow-x:auto; border-radius:var(--radius-m); box-shadow:var(--shadow-card); }
+  table.spec{
+    width:100%; border-collapse:collapse; background:var(--white);
+    font-family:var(--font-mono); font-size:0.78rem; min-width:1180px;
+  }
+  table.spec td.col-desc{ max-width:220px; white-space:normal; }
+  table.spec td.col-blank{ color:var(--sand-deep); }
+  table.spec caption{
+    text-align:left; padding:14px 18px; font-family:var(--font-display);
+    text-transform:uppercase; letter-spacing:0.05em; color:var(--white);
+    background:var(--forest); font-size:0.95rem;
+  }
+  table.spec th{
+    text-align:left; background:var(--sand-deep); color:var(--forest-deep);
+    padding:10px 14px; font-size:0.74rem; text-transform:uppercase; letter-spacing:0.06em;
+    position:sticky; top:0;
+  }
+  table.spec td{ padding:10px 14px; border-top:1px solid var(--sand-deep); vertical-align:top; }
+  table.spec tr:nth-child(even) td{ background:#faf6ec; }
+  .pill-content{ background:#e9f0e7; color:var(--pine); padding:2px 8px; border-radius:999px; font-size:0.72rem; white-space:nowrap; }
+  .pill-continente{ background:#fbe7da; color:var(--clay); padding:2px 8px; border-radius:999px; font-size:0.72rem; white-space:nowrap; }
+
+  .examples-head{ margin:40px 0 14px; }
+
+  /* ============ FOOTER ============ */
+  footer{
+    background:var(--forest-deep); color:var(--sand-deep);
+    padding:34px 0; margin-top:20px;
+  }
+  footer .wrap{ display:flex; justify-content:space-between; gap:16px; flex-wrap:wrap; align-items:center; }
+  footer p{ margin:0; font-size:0.82rem; color:var(--sand-deep); }
+  footer .foot-brand{ font-family:var(--font-display); letter-spacing:0.06em; color:var(--white); text-transform:uppercase; }
+
+  /* ============ TOAST ============ */
+  #toast{
+    position:fixed; left:50%; bottom:26px; transform:translate(-50%, 20px);
+    background:var(--forest-deep); color:var(--white);
+    font-family:var(--font-display); letter-spacing:0.04em; text-transform:uppercase;
+    font-size:0.85rem; padding:12px 22px; border-radius:999px;
+    box-shadow:var(--shadow-card); opacity:0; pointer-events:none; z-index:100;
+    transition:opacity 220ms ease, transform 220ms ease;
+    display:flex; align-items:center; gap:8px;
+  }
+  #toast svg{ width:18px; height:18px; color:var(--clay-light); }
+  #toast.show{ opacity:1; transform:translate(-50%, 0); }
+
+  @media (max-width: 760px){
+    .about-grid{ grid-template-columns:1fr; }
+    nav.tabs button{ padding:14px 10px; font-size:0.82rem; }
+    .topbar-inner{ min-height:auto; padding:10px 20px; }
+    .hero{ padding:46px 0 60px; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation-duration:0.001ms !important; transition-duration:0.001ms !important; scroll-behavior:auto !important; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ NAV ============ -->
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="#" data-go="productos">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+        <circle cx="12" cy="12" r="9.5"></circle>
+        <polygon points="14.5,8 11,11 9.5,16 13,13" fill="currentColor" stroke="none"></polygon>
+      </svg>
+      <span>UTN Outdoors<span class="sub">camping &amp; pesca</span></span>
+    </a>
+
+    <nav class="tabs" role="tablist" aria-label="Secciones de la tienda">
+      <button role="tab" aria-selected="true" data-go="productos" id="tab-productos">Productos</button>
+      <button role="tab" aria-selected="false" data-go="combos" id="tab-combos">Combos</button>
+      <button role="tab" aria-selected="false" data-go="nosotros" id="tab-nosotros">Nosotros</button>
+      <button role="tab" aria-selected="false" data-go="tecnico" id="tab-tecnico">Ficha técnica</button>
+    </nav>
+
+    <div class="cart-pill" aria-live="polite">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="20" r="1.4"></circle><circle cx="17" cy="20" r="1.4"></circle><path d="M2.5 3h2.2l2.1 11.4a2 2 0 0 0 2 1.6h7.6a2 2 0 0 0 2-1.6L20.5 7H6"></path></svg>
+      <span id="cartCount">0</span>
+    </div>
+  </div>
+</header>
+
+<!-- ============ HERO ============ -->
+<div class="hero">
+  <svg class="hero-topo" viewBox="0 0 1200 320" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M0,260 C150,210 300,290 450,250 C600,210 750,260 900,230 C1020,210 1120,240 1200,220" fill="none" stroke="#4f7a5c" stroke-width="2"/>
+    <path d="M0,290 C150,250 320,310 470,275 C620,240 760,290 920,260 C1040,240 1130,265 1200,250" fill="none" stroke="#3f6b4f" stroke-width="2"/>
+    <path d="M0,180 C160,140 300,200 460,160 C610,125 760,175 910,140 C1030,115 1130,150 1200,130" fill="none" stroke="#355e44" stroke-width="2"/>
+    <path d="M0,120 C160,90 320,140 470,100 C620,65 770,110 920,75 C1040,50 1130,80 1200,65" fill="none" stroke="#2c4d39" stroke-width="2"/>
+  </svg>
+  <div class="wrap hero-content">
+    <p class="eyebrow">Actividad Formativa N.º 2 — Algoritmos y Estructuras de Datos</p>
+    <h1>Equipo de <span>outdoor</span>, armado a tu medida</h1>
+    <p class="lead">Carpas, cañas, reels y todo lo necesario para acampar o pescar — pieza por pieza, o en combos temáticos pensados para cada plan: la isla, el río, la montaña.</p>
+    <div class="hero-cta">
+      <button class="btn btn-primary" data-go="combos">Ver combos inteligentes</button>
+      <button class="btn btn-ghost" data-go="productos">Explorar catálogo</button>
+    </div>
+  </div>
+</div>
+
+<main class="wrap">
+
+  <!-- ============ SECCIÓN 1: PRODUCTOS ============ -->
+  <section id="view-productos" class="view active section-pad" aria-labelledby="tab-productos">
+    <div class="section-head">
+      <p class="eyebrow">Sección 01</p>
+      <h2>Catálogo individual</h2>
+      <p>Cada artículo, elegido y comprado por separado. Stock real simulado y precio unitario de referencia para armar tu propio equipo.</p>
+    </div>
+    <div id="gridProductos" class="grid"></div>
+  </section>
+
+  <!-- ============ SECCIÓN 2: COMBOS ============ -->
+  <section id="view-combos" class="view section-pad" aria-labelledby="tab-combos">
+    <div class="section-head">
+      <p class="eyebrow">Sección 02</p>
+      <h2>Combos temáticos</h2>
+      <p>El motor de combos agrupa productos complementarios del mismo catálogo en un paquete único, con precio promocional y ahorro calculado automáticamente.</p>
+    </div>
+    <div id="gridCombos" class="combo-grid"></div>
+  </section>
+
+  <!-- ============ SECCIÓN 3: NOSOTROS ============ -->
+  <section id="view-nosotros" class="view section-pad" aria-labelledby="tab-nosotros">
+    <div class="section-head">
+      <p class="eyebrow">Sección 03</p>
+      <h2>Sobre UTN Outdoors</h2>
+    </div>
+    <div class="about-grid">
+      <div>
+        <p class="lead">UTN Outdoors nace como proyecto de cátedra de Algoritmos y Estructuras de Datos de la Universidad Tecnológica Nacional, pensado como una tienda de indumentaria y equipamiento de camping y pesca con foco en la experiencia del usuario y en el diseño de datos detrás de ella.</p>
+        <p>Más que un catálogo, es un caso de estudio aplicado: cada producto y cada combo se guardan bajo una misma estructura de registro homogénea, lo que permite entender en código real la diferencia entre un campo de contenido simple y un campo continente compuesto, y por qué una clave bien diseñada es la columna vertebral de cualquier sistema de información.</p>
+        <div class="values">
+          <div class="value-row">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2 3 7l9 5 9-5-9-5Z"></path><path d="M3 12l9 5 9-5"></path><path d="M3 17l9 5 9-5"></path></svg>
+            <div><h4>Catálogo unificado</h4><p>Productos y combos conviven en una sola estructura de datos, sin tablas paralelas.</p></div>
+          </div>
+          <div class="value-row">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg>
+            <div><h4>Combos con sentido</h4><p>Cada kit responde a una actividad real: pesca, isla o trekking, no a un descuento al azar.</p></div>
+          </div>
+          <div class="value-row">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19h16"></path><path d="M6 19V9l6-5 6 5v10"></path></svg>
+            <div><h4>Pensado para el aire libre</h4><p>Selección de productos orientada a quienes arman su propio refugio, en la isla o en la montaña.</p></div>
+          </div>
+        </div>
+      </div>
+      <ul class="stat-list">
+        <li><strong>8</strong><span>Rubros en el catálogo base</span></li>
+        <li><strong>3</strong><span>Combos temáticos activos</span></li>
+        <li><strong>1</strong><span>Estructura de registro homogénea para todo el catálogo</span></li>
+        <li><strong>100%</strong><span>Frontend — un solo archivo, sin backend</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============ SECCIÓN 4: VISTA TÉCNICA ============ -->
+  <section id="view-tecnico" class="view section-pad" aria-labelledby="tab-tecnico">
+    <div class="section-head">
+      <p class="eyebrow">Sección 04</p>
+      <h2>Vista técnica del registro</h2>
+      <p>Estructura de datos formal que sostiene todo el catálogo, productos y combos incluidos, junto a ejemplos reales tomados de las secciones anteriores.</p>
+    </div>
+
+    <div class="tech-intro">
+      <p><strong>idProducto</strong> es la clave primaria del catálogo. Es un único campo <code>AN(7)</code> —un campo <strong>contenido</strong>, sin subcampos— y por eso se clasifica como <strong>clave simple</strong>: alcanza con ese solo campo para identificar de forma unívoca cualquier registro, sea producto o combo. Su valor sigue, como convención de escritura, un prefijo de tipo (<code>PR</code> producto / <code>CB</code> combo) más un correlativo, pero eso es solo formato del dato, no una estructura compuesta.</p>
+    </div>
+
+    <pre class="record-block" id="recordBlock"></pre>
+
+    <div class="table-scroll">
+      <table class="spec">
+        <caption>Estructura del registro — ITEMCATALOGO</caption>
+        <thead>
+          <tr><th>Campo</th><th>Tipo de dato</th><th>Tamaño</th><th>Clasificación</th><th>Descripción</th></tr>
+        </thead>
+        <tbody id="specBody"></tbody>
+      </table>
+    </div>
+
+    <h3 class="examples-head">Ejemplos de registros reales cargados</h3>
+    <p>Se listan los 11 registros completos del catálogo (8 productos + 3 combos). Los campos que no aplican a un tipo de registro quedan en blanco.</p>
+    <div class="table-scroll">
+      <table class="spec">
+        <caption>Instancias del catálogo — todos los registros</caption>
+        <thead>
+          <tr>
+            <th>idProducto</th><th>nombreItem</th><th>tipoItem</th><th>categoria</th>
+            <th>descripcionBreve</th><th>precioUnitario</th><th>stockDisponible</th>
+            <th>componentesCombo</th><th>precioComboPromocional</th><th>porcentajeAhorro</th><th>imagenReferencia</th>
+          </tr>
+        </thead>
+        <tbody id="examplesBody"></tbody>
+      </table>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <span class="foot-brand">UTN Outdoors</span>
+    <p>Proyecto académico — Algoritmos y Estructuras de Datos · UTN · Sin backend, un solo archivo HTML.<br>Autor: Meza, Leandro David</p>
+  </div>
+</footer>
+
+<div id="toast" role="status">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+  <span id="toastMsg">Agregado</span>
+</div>
+
+<script>
+/* ============================================================
+   ILUSTRACIONES SVG a color para cada producto/combo.
+   Se generan como arte vectorial propio (sin fotos externas) para que
+   el archivo siga siendo 100% autónomo y no dependa de enlaces externos
+   que puedan romperse al desplegar en GitHub Pages.
+   ============================================================ */
+const ICONS = {
+  tent: '<svg viewBox="0 0 64 64"><path d="M6 50 32 10l26 40Z" style="fill:var(--clay-light)"/><path d="M32 10 18 50h28Z" style="fill:var(--clay)"/><path d="M27 50 32 34l5 16Z" style="fill:var(--forest-deep)"/><rect x="3" y="49" width="58" height="3" rx="1.5" style="fill:var(--sand-deep)"/></svg>',
+  rod: '<svg viewBox="0 0 64 64"><path d="M8 56 50 10" stroke="var(--sand-deep)" stroke-width="2.4" fill="none" stroke-linecap="round"/><circle cx="50" cy="10" r="4.5" style="fill:var(--river-light)"/><circle cx="50" cy="10" r="2" style="fill:var(--forest-deep)"/><path d="M8 56c5-4 6-10 2-17" stroke="var(--river-light)" stroke-width="1.6" fill="none"/><rect x="4" y="51" width="14" height="7" rx="3" transform="rotate(-35 11 54)" style="fill:var(--clay)"/></svg>',
+  reel: '<svg viewBox="0 0 64 64"><circle cx="32" cy="32" r="22" style="fill:var(--river-light)"/><circle cx="32" cy="32" r="14" style="fill:var(--forest-deep)"/><circle cx="32" cy="32" r="4.5" style="fill:var(--clay-light)"/><rect x="29" y="2" width="6" height="14" rx="2" style="fill:var(--sand-deep)"/><rect x="29" y="48" width="6" height="14" rx="2" style="fill:var(--sand-deep)"/></svg>',
+  lure: '<svg viewBox="0 0 64 64"><ellipse cx="26" cy="32" rx="18" ry="9" style="fill:var(--clay)"/><ellipse cx="20" cy="32" rx="9" ry="9" style="fill:var(--clay-light)"/><circle cx="15" cy="30" r="2" style="fill:var(--forest-deep)"/><path d="M44 32 58 24M44 32 58 40M44 32 56 32" stroke="var(--sand-deep)" stroke-width="2" fill="none" stroke-linecap="round"/></svg>',
+  shirt: '<svg viewBox="0 0 64 64"><path d="M20 6 8 14l4 10 8-4v36h24V20l8 4 4-10-12-8-4 4h-16Z" style="fill:var(--river-light)"/><path d="M20 6h24l-4 4h-16Z" style="fill:var(--forest-deep)"/><circle cx="32" cy="40" r="7" style="fill:var(--clay-light)"/><g stroke="var(--clay-light)" stroke-width="2" stroke-linecap="round"><path d="M32 28v3M32 49v3M20 40h3M41 40h3"/></g></svg>',
+  stove: '<svg viewBox="0 0 64 64"><rect x="8" y="30" width="48" height="26" rx="4" style="fill:var(--river-light)"/><circle cx="32" cy="43" r="11" style="fill:var(--forest-deep)"/><path d="M32 36c3 4 3 7 0 10-3-3-3-6 0-10Z" style="fill:var(--clay-light)"/><rect x="14" y="34" width="36" height="4" rx="2" style="fill:var(--sand-deep)" opacity="0.5"/></svg>',
+  bottle: '<svg viewBox="0 0 64 64"><rect x="22" y="4" width="20" height="10" rx="2" style="fill:var(--sand-deep)"/><path d="M24 14h16c5 4 7 9 7 15v28a4 4 0 0 1-4 4H21a4 4 0 0 1-4-4V29c0-6 2-11 7-15Z" style="fill:var(--river-light)"/><rect x="17" y="34" width="30" height="6" style="fill:var(--forest-deep)" opacity="0.55"/></svg>',
+  backpack: '<svg viewBox="0 0 64 64"><path d="M20 22a12 12 0 0 1 24 0v36H20Z" style="fill:var(--clay)"/><path d="M24 22v-6a8 8 0 0 1 16 0v6" stroke="var(--sand-deep)" stroke-width="3" fill="none"/><rect x="25" y="34" width="14" height="12" rx="2" style="fill:var(--clay-light)"/><path d="M20 28h-4a4 4 0 0 0-4 4v8a4 4 0 0 0 4 4h4" style="fill:var(--forest-deep)"/></svg>',
+  island: '<svg viewBox="0 0 64 64"><path d="M4 46c6-5 10 3 16-1s10 3 16-1 10 3 22-2" stroke="var(--river-light)" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M16 46c0-12 6-20 6-20s6 8 6 20Z" style="fill:var(--clay-light)"/><path d="M22 26c-6-2-10-8-10-8s7-2 12 2 4 9 4 9-2-2-6-3Z" style="fill:var(--pine-light)"/></svg>',
+  trek: '<svg viewBox="0 0 64 64"><path d="M2 54 16 24l8 14 6-9 8 12 16-24 8 37Z" style="fill:var(--pine-light)"/><path d="M16 24l8 14 6-9 4 6-10 19H2Z" style="fill:var(--forest-deep)" opacity="0.55"/><circle cx="46" cy="10" r="5" style="fill:var(--clay-light)"/></svg>',
+  fishCombo: '<svg viewBox="0 0 64 64"><path d="M4 32c8-10 18-14 32-14s20 6 24 14c-4 8-12 14-24 14S12 42 4 32Z" style="fill:var(--river-light)"/><circle cx="48" cy="28" r="2.4" style="fill:var(--forest-deep)"/><path d="M54 26 62 18M54 38 62 46" stroke="var(--sand-deep)" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg>'
+};
+
+/* ============================================================
+   ESTRUCTURA DE DATOS — refleja el registro formal UTN
+   tipoItem: 'P' producto individual | 'C' combo temático
+   ============================================================ */
+const productos = [
+  { idProducto:'PR-0001', nombreItem:'Carpa Refugio 4 Estaciones', tipoItem:'P', categoria:'Carpas', descripcionBreve:'Doble techo impermeable, estructura aerodinámica para viento fuerte. 4 personas.', precioUnitario:189999, stockDisponible:12, imagenReferencia:'imagenes/PR-0001-carpa-refugio.jpg', icon:'tent' },
+  { idProducto:'PR-0002', nombreItem:'Caña Spinning ProCast 2.10m', tipoItem:'P', categoria:'Cañas de Pescar', descripcionBreve:'Fibra de carbono, acción media, ideal para río y costa.', precioUnitario:64500, stockDisponible:20, imagenReferencia:'imagenes/PR-0002-cana-spinning.jpg', icon:'rod' },
+  { idProducto:'PR-0003', nombreItem:'Reel Frontal TorrentX 4000', tipoItem:'P', categoria:'Reels de Pesca', descripcionBreve:'Cuerpo metálico, 6 rulemanes, freno progresivo de precisión.', precioUnitario:58900, stockDisponible:15, imagenReferencia:'imagenes/PR-0003-reel-frontal.jpg', icon:'reel' },
+  { idProducto:'PR-0004', nombreItem:'Set Señuelos Cuchara Dorado x6', tipoItem:'P', categoria:'Señuelos', descripcionBreve:'Variedad de colores y vibración para pesca de dorado y tararira.', precioUnitario:21500, stockDisponible:34, imagenReferencia:'imagenes/PR-0004-senuelos-dorado.jpg', icon:'lure' },
+  { idProducto:'PR-0005', nombreItem:'Remera Trek UV+50 Manga Larga', tipoItem:'P', categoria:'Indumentaria UV', descripcionBreve:'Tela técnica transpirable, protección solar UPF 50+.', precioUnitario:23900, stockDisponible:40, imagenReferencia:'imagenes/PR-0005-remera-uv.jpg', icon:'shirt' },
+  { idProducto:'PR-0006', nombreItem:'Anafe a Gas FuegoLite Compacto', tipoItem:'P', categoria:'Anafes Portátiles', descripcionBreve:'Encendido piezoeléctrico, plegable, ideal para mochileros.', precioUnitario:35200, stockDisponible:18, imagenReferencia:'imagenes/PR-0006-anafe-portatil.jpg', icon:'stove' },
+  { idProducto:'PR-0007', nombreItem:'Cantimplora Acero Glaciar 1L', tipoItem:'P', categoria:'Cantimploras', descripcionBreve:'Acero inoxidable doble pared, mantiene frío 24h / calor 12h.', precioUnitario:18700, stockDisponible:50, imagenReferencia:'imagenes/PR-0007-cantimplora-acero.jpg', icon:'bottle' },
+  { idProducto:'PR-0008', nombreItem:'Mochila Travesía 60L AireLibre', tipoItem:'P', categoria:'Mochilas', descripcionBreve:'Sistema de carga ajustable, cubierta antilluvia incluida.', precioUnitario:79900, stockDisponible:16, imagenReferencia:'imagenes/PR-0008-mochila-travesia.jpg', icon:'backpack' },
+];
+
+/* Combos: SIN imagenReferencia propia (queda vacía en el registro). Su imagen
+   se arma dinámicamente como un collage de las fotos de sus componentes. */
+const combos = [
+  {
+    idProducto:'CB-0001', nombreItem:'Kit Fin de Semana en la Isla', tipoItem:'C', categoria:'Isla',
+    descripcionBreve:'Carpa, cantimplora, mochila y remera UV: todo para dos días desconectado.',
+    idComponente1:'PR-0001', cantidad1:1,
+    idComponente2:'PR-0007', cantidad2:1,
+    idComponente3:'PR-0008', cantidad3:1,
+    idComponente4:'PR-0005', cantidad4:1,
+  },
+  {
+    idProducto:'CB-0002', nombreItem:'Kit Pesca de Dorado', tipoItem:'C', categoria:'Pesca de Dorado',
+    descripcionBreve:'Caña, reel y set de señuelos pensado para una jornada de pesca de dorado, con cantimplora incluida.',
+    idComponente1:'PR-0002', cantidad1:1,
+    idComponente2:'PR-0003', cantidad2:1,
+    idComponente3:'PR-0004', cantidad3:1,
+    idComponente4:'PR-0007', cantidad4:1,
+  },
+  {
+    idProducto:'CB-0003', nombreItem:'Kit Trekking Extremo', tipoItem:'C', categoria:'Trekking Extremo',
+    descripcionBreve:'Mochila, remera UV, cantimplora y anafe compacto para una travesía de montaña de varios días.',
+    idComponente1:'PR-0008', cantidad1:1,
+    idComponente2:'PR-0005', cantidad2:1,
+    idComponente3:'PR-0007', cantidad3:1,
+    idComponente4:'PR-0006', cantidad4:1,
+  },
+];
+
+/* Devuelve los componentes de un combo como lista [{id, cantidad}], leyendo
+   los 4 pares idComponenteN / cantidadN del registro (estructura continente). */
+function componentesDe(combo){
+  const out = [];
+  for(let i=1; i<=4; i++){
+    const id = combo['idComponente'+i];
+    const cant = combo['cantidad'+i];
+    if(id) out.push({ id, cantidad:cant });
+  }
+  return out;
+}
+
+const campos = [
+  { campo:'idProducto', tipo:'Alfanumérico (AN)', tam:'7 car. / 7 bytes', clase:'Contenido', desc:'Clave primaria simple (un único campo). Valor con convención prefijo + correlativo.' },
+  { campo:'nombreItem', tipo:'Alfanumérico (AN)', tam:'40 car. / 40 bytes', clase:'Contenido', desc:'Nombre comercial del producto o del combo.' },
+  { campo:'tipoItem', tipo:'Carácter', tam:'1 byte', clase:'Contenido', desc:"'P' producto individual / 'C' combo temático." },
+  { campo:'categoria', tipo:'Alfanumérico (AN)', tam:'25 car. / 25 bytes', clase:'Contenido', desc:'Rubro (si es producto) o temática (si es combo).' },
+  { campo:'descripcionBreve', tipo:'Alfanumérico (AN)', tam:'150 car. / 150 bytes', clase:'Contenido', desc:'Detalle del artículo o composición del combo.' },
+  { campo:'precioUnitario', tipo:'Real', tam:'4 bytes', clase:'Contenido', desc:'Precio de lista del producto o suma de componentes del combo.' },
+  { campo:'stockDisponible', tipo:'Entero', tam:'2 bytes', clase:'Contenido', desc:'Unidades disponibles.' },
+  { campo:'componentesCombo', tipo:'Registro anidado (4 × AN(7) + Entero)', tam:'4 × 9 bytes = 36 bytes', clase:'Continente', desc:'Solo aplica a combos: sub-registro con 4 pares idComponenteN / cantidadN.' },
+  { campo:'precioComboPromocional', tipo:'Real', tam:'4 bytes', clase:'Contenido', desc:'Precio final del combo (solo si tipoItem = C).' },
+  { campo:'porcentajeAhorro', tipo:'Real', tam:'4 bytes', clase:'Contenido', desc:'% de descuento frente a la compra de componentes por separado.' },
+  { campo:'imagenReferencia', tipo:'Alfanumérico (AN)', tam:'120 car. / 120 bytes', clase:'Contenido', desc:'Ruta relativa a la imagen del producto. Vacío en combos: su imagen se arma como collage de las imágenes de sus componentes.' },
+];
+
+/* ============================================================
+   LÓGICA DE PRECIOS Y STOCK DE COMBO (a partir del catálogo individual)
+   ============================================================ */
+function precioBase(idProducto){
+  const p = productos.find(p => p.idProducto === idProducto);
+  return p ? p.precioUnitario : 0;
+}
+function stockBase(idProducto){
+  const p = productos.find(p => p.idProducto === idProducto);
+  return p ? p.stockDisponible : 0;
+}
+combos.forEach(c => {
+  const comps = componentesDe(c);
+  const total = comps.reduce((acc, comp) => acc + precioBase(comp.id) * comp.cantidad, 0);
+  c.precioUnitario = total;
+  c.porcentajeAhorro = 15;
+  c.precioComboPromocional = Math.round(total * (1 - c.porcentajeAhorro/100));
+  c.stockDisponible = Math.min(...comps.map(comp => Math.floor(stockBase(comp.id) / comp.cantidad)));
+});
+
+const fmt = n => n.toLocaleString('es-AR', { style:'currency', currency:'ARS', maximumFractionDigits:0 });
+
+/* Reemplaza una imagen rota por la ilustración de respaldo correspondiente,
+   sin deformar el contenedor (mismo aspect-ratio, mismo recorte). */
+function useFallback(container, iconKey){
+  container.classList.add('img-fallback');
+  container.innerHTML = ICONS[iconKey] || '';
+}
+
+/* ============================================================
+   RENDER — PRODUCTOS
+   ============================================================ */
+const gridProductos = document.getElementById('gridProductos');
+productos.forEach(p => {
+  const card = document.createElement('article');
+  card.className = 'card';
+  card.innerHTML = `
+    <div class="card-art">
+      <img src="${p.imagenReferencia}" alt="${p.nombreItem}" loading="lazy">
+    </div>
+    <div class="card-body">
+      <span class="tag">${p.categoria}</span>
+      <h3>${p.nombreItem}</h3>
+      <p class="desc">${p.descripcionBreve}</p>
+      <div class="card-footer">
+        <div>
+          <div class="price">${fmt(p.precioUnitario)}</div>
+          <div class="stock-note">${p.stockDisponible} unid. disponibles</div>
+        </div>
+        <button class="btn-add" type="button" aria-label="Agregar ${p.nombreItem} al carrito">Agregar</button>
+      </div>
+    </div>`;
+  const img = card.querySelector('.card-art img');
+  img.addEventListener('error', () => useFallback(img.closest('.card-art'), p.icon), { once:true });
+  card.querySelector('.btn-add').addEventListener('click', e => addToCart(p.nombreItem, e.currentTarget));
+  gridProductos.appendChild(card);
+});
+
+/* ============================================================
+   RENDER — COMBOS (la imagen es un collage 2x2 de sus componentes)
+   ============================================================ */
+const gridCombos = document.getElementById('gridCombos');
+combos.forEach(c => {
+  const comps = componentesDe(c).map(comp => productos.find(p => p.idProducto === comp.id));
+  const cellsHtml = comps.map(prod => `
+    <div class="cell">
+      <img src="${prod.imagenReferencia}" alt="${prod.nombreItem}" loading="lazy" data-icon="${prod.icon}">
+    </div>`).join('');
+
+  const card = document.createElement('article');
+  card.className = 'combo-card';
+  card.innerHTML = `
+    <div class="combo-art">
+      ${cellsHtml}
+      <div class="combo-stamp">AHORRÁ<br>${c.porcentajeAhorro}%</div>
+    </div>
+    <div class="combo-body">
+      <span class="combo-tag">${c.categoria}</span>
+      <h3>${c.nombreItem}</h3>
+      <p class="desc">${c.descripcionBreve}</p>
+      <div class="combo-pricing">
+        <span class="price-old">${fmt(c.precioUnitario)}</span>
+        <span class="price-new">${fmt(c.precioComboPromocional)}</span>
+      </div>
+      <button class="btn-add" type="button" aria-label="Agregar combo ${c.nombreItem} al carrito">Agregar combo</button>
+    </div>
+  `;
+  card.querySelectorAll('.combo-art .cell img').forEach(img => {
+    img.addEventListener('error', () => useFallback(img.closest('.cell'), img.dataset.icon), { once:true });
+  });
+  card.querySelector('.btn-add').addEventListener('click', e => addToCart(c.nombreItem, e.currentTarget));
+  gridCombos.appendChild(card);
+});
+
+/* ============================================================
+   RENDER — VISTA TÉCNICA
+   ============================================================ */
+function padTo(str, col){ return str + ' '.repeat(Math.max(1, col - str.length)); }
+const NAME_COL = 28;
+function fLine(ind, name, tipo, note){
+  const left = '    '.repeat(ind) + name;
+  let s = `${padTo(left, NAME_COL)}: <span class="ty">${tipo}</span>;`;
+  if(note) s += `   <span class="cm">// ${note}</span>`;
+  return s;
+}
+
+const recordLines = [
+  `<span class="cm">ACCION</span> GestionCatalogoUTNOutdoors <span class="cm">ES;</span>`,
+  `<span class="cm">AMBIENTE</span>`,
+  `ITEMCATALOGO = <span class="kw">Registro</span>`,
+  fLine(1, 'idProducto', 'AN(7)', 'Clave primaria simple'),
+  fLine(1, 'nombreItem', 'AN(40)'),
+  fLine(1, 'tipoItem', 'Caracter', "'P' producto / 'C' combo"),
+  fLine(1, 'categoria', 'AN(25)'),
+  fLine(1, 'descripcionBreve', 'AN(150)'),
+  fLine(1, 'precioUnitario', 'Real'),
+  fLine(1, 'stockDisponible', 'Entero'),
+  `    componentesCombo = <span class="kw">Registro</span>      <span class="cm">// campo CONTINENTE</span>`,
+  fLine(2, 'idComponente1', 'AN(7)'),
+  fLine(2, 'cantidad1', 'Entero'),
+  fLine(2, 'idComponente2', 'AN(7)'),
+  fLine(2, 'cantidad2', 'Entero'),
+  fLine(2, 'idComponente3', 'AN(7)'),
+  fLine(2, 'cantidad3', 'Entero'),
+  fLine(2, 'idComponente4', 'AN(7)'),
+  fLine(2, 'cantidad4', 'Entero'),
+  `    <span class="kw">Fin Registro;</span>`,
+  fLine(1, 'precioComboPromocional', 'Real'),
+  fLine(1, 'porcentajeAhorro', 'Real'),
+  fLine(1, 'imagenReferencia', 'AN(120)', 'vacío en combos'),
+  `<span class="kw">Fin Registro;</span>`,
+];
+document.getElementById('recordBlock').innerHTML = recordLines.join('\n');
+
+const specBody = document.getElementById('specBody');
+campos.forEach(c => {
+  const tr = document.createElement('tr');
+  const pillClass = c.clase === 'Continente' ? 'pill-continente' : 'pill-content';
+  tr.innerHTML = `<td><strong>${c.campo}</strong></td><td>${c.tipo}</td><td>${c.tam}</td><td><span class="${pillClass}">${c.clase}</span></td><td>${c.desc}</td>`;
+  specBody.appendChild(tr);
+});
+
+/* Tabla de ejemplos: TODOS los registros del catálogo (8 productos + 3 combos),
+   con los campos que no aplican a ese tipo de registro dejados en blanco. */
+const examplesBody = document.getElementById('examplesBody');
+const blank = '<span class="col-blank">—</span>';
+const todosLosRegistros = [...productos, ...combos];
+todosLosRegistros.forEach(e => {
+  const tr = document.createElement('tr');
+  const esCombo = e.tipoItem === 'C';
+  const componentesTexto = esCombo
+    ? componentesDe(e).map(c => `${c.id}×${c.cantidad}`).join(', ')
+    : '';
+  const precioComboTexto = esCombo ? fmt(e.precioComboPromocional) : '';
+  const ahorroTexto = esCombo ? `${e.porcentajeAhorro}%` : '';
+  const imagenTexto = esCombo ? '' : e.imagenReferencia;
+
+  const cell = (val, cls) => `<td${cls ? ` class="${cls}"` : ''}>${val === '' ? blank : val}</td>`;
+
+  tr.innerHTML =
+    cell(`<strong>${e.idProducto}</strong>`) +
+    cell(e.nombreItem) +
+    cell(e.tipoItem) +
+    cell(e.categoria) +
+    cell(e.descripcionBreve, 'col-desc') +
+    cell(fmt(e.precioUnitario)) +
+    cell(e.stockDisponible) +
+    cell(componentesTexto) +
+    cell(precioComboTexto) +
+    cell(ahorroTexto) +
+    cell(imagenTexto, 'col-desc');
+  examplesBody.appendChild(tr);
+});
+
+/* ============================================================
+   NAVEGACIÓN ENTRE SECCIONES
+   ============================================================ */
+const tabs = document.querySelectorAll('nav.tabs button');
+const views = document.querySelectorAll('section.view');
+function goTo(name){
+  views.forEach(v => v.classList.toggle('active', v.id === 'view-' + name));
+  tabs.forEach(t => t.setAttribute('aria-selected', t.dataset.go === name ? 'true' : 'false'));
+  window.scrollTo({ top:0, behavior:'smooth' });
+}
+document.querySelectorAll('[data-go]').forEach(el => {
+  el.addEventListener('click', ev => { ev.preventDefault(); goTo(el.dataset.go); });
+});
+
+/* ============================================================
+   CARRITO SIMULADO + TOAST
+   ============================================================ */
+let cartCount = 0;
+const cartCountEl = document.getElementById('cartCount');
+const toast = document.getElementById('toast');
+const toastMsg = document.getElementById('toastMsg');
+let toastTimer;
+
+function addToCart(nombre, btn){
+  cartCount++;
+  cartCountEl.textContent = cartCount;
+  toastMsg.textContent = `${nombre} — agregado`;
+  toast.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => toast.classList.remove('show'), 1800);
+
+  const original = btn.textContent;
+  btn.textContent = '✓ Agregado';
+  btn.classList.add('added');
+  btn.disabled = true;
+  setTimeout(() => {
+    btn.textContent = original;
+    btn.classList.remove('added');
+    btn.disabled = false;
+  }, 1100);
+}
+</script>
+</body>
+</html>
