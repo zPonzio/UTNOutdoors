@@ -45,9 +45,10 @@ Fin Registro;
 
 3. Enlaces a chats con Gemini y Claude
 
-https://gemini.google.com/share/9994453b06e5
-https://claude.ai/share/da084830-7a3c-4eb6-90e7-52e93c4b4417
+- https://gemini.google.com/share/9994453b06e5 - https://claude.ai/share/da084830-7a3c-4eb6-90e7-52e93c4b4417
 
 4. Reflexión
 
-El trabajar con la IA como herramienta para el desarrollo de código, asistente para la planificación y despliegue, y la redacción de texto; es sin dudas una forma de trabajar inexorable en la actualidad. Negar su uso hubiese implicado en este caso, tener que dediccar semanas, y seguramente meses, al aprendizaje de diferentes lenguajes y comprensión del uso de la plataforma de GitHub. Sin embargo requiere una revisión constante y activa de cada uno de los detalles del contenido que dicha herramienta produce, de lo contrario existirían errores muy significativos en el producto final.
+    El trabajar con la IA como herramienta para el desarrollo de código, asistente para la planificación y despliegue, y la redacción de texto; es sin dudas una forma de trabajar inexorable en la actualidad. Negar su uso hubiese implicado en este caso, tener que dediccar semanas, y seguramente meses, al aprendizaje de diferentes lenguajes y comprensión del uso de la plataforma de GitHub.
+   Sin embargo requiere una revisión constante y activa de cada uno de los detalles del contenido que dicha herramienta produce, de lo contrario existirían errores muy significativos en el producto final.
+    Otro aspecto realmente importante a considerar es el costo de la inteligencia artificial. Esto se vio reflejado en mi decisión de utilizar dos modelos diferentes, dedicando uno a la planificación y otro para el desarrollo.
