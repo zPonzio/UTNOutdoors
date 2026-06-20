@@ -1,5 +1,8 @@
 # UTNOutdoors
 Actividad formativa N°2 de AED
+Alumno: Meza, Leandro David
+Comisión: ISI B (k1.2)
+
 # https://zponzio.github.io/UTNOutdoors/
 
 
@@ -45,7 +48,8 @@ Fin Registro;
 
 3. Enlaces a chats con Gemini y Claude
 
-- https://gemini.google.com/share/9994453b06e5 - https://claude.ai/share/da084830-7a3c-4eb6-90e7-52e93c4b4417
+- https://gemini.google.com/share/9994453b06e5
+- https://claude.ai/share/da084830-7a3c-4eb6-90e7-52e93c4b4417
 
 4. Reflexión
 
